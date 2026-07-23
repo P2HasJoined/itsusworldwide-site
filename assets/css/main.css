@@ -1,0 +1,170 @@
+/* ============================================================================
+   ItsUsWorldwide v2 — global design system
+   ~60% dark-green base / 30% mid-green & neutrals / ~10% warm accent.
+   Terracotta: primary CTAs + season timeline band (+ nav active dot).
+   Vitality green: the single "listen" hover signal.
+   Pixel font: ACCESSORY ONLY — episode numbers, timestamps, small tags,
+   footer credit, concrete fragments. Never headlines, never body copy.
+   ========================================================================= */
+
+:root {
+  --bg-base: #0E1A14;
+  --bg-surface-1: #0B2419;
+  --bg-surface-2: #12211A;
+  --border: #1C3A2A;
+  --green-forest: #2C5F34;
+  --green-mid: #2E6F40;
+  --green-vitality: #3ECF8E;
+  --accent-warm: #C4673A;
+  --accent-warm-2: #E2725B;
+  --accent-amber: #F59E0B;
+  --neutral-clay: #C4A484;
+  --neutral-cream: #EDE8D0;
+
+  /* derived — AA-checked on their backgrounds */
+  --text: var(--neutral-cream);   /* 13.2:1 on bg-base */
+  --text-muted: #A9B8A6;          /* 7.4:1  */
+  --text-dim: #7E8F80;            /* 4.6:1  */
+  --ink: #0E1A14;
+
+  --font-display: 'Inter Tight', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  --font-px: 'Press Start 2P', 'Courier New', monospace;
+
+  --nav-h: 76px;
+  --radius: 14px;
+  --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+html.lenis, html.lenis body { height: auto; }
+
+body {
+  background: var(--bg-base);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, video, canvas { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+ul, ol { list-style: none; }
+
+:focus-visible {
+  outline: 2px solid var(--neutral-cream);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection { background: var(--green-forest); color: var(--neutral-cream); }
+
+.container { max-width: 1240px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); }
+
+/* type helpers */
+.px { font-family: var(--font-px); font-weight: 400; }
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--neutral-clay);
+  margin-bottom: 18px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-size: clamp(34px, 5vw, 64px);
+  line-height: 1.04;
+  margin-bottom: 44px;
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed; top: -60px; left: 16px; z-index: 500;
+  background: var(--neutral-cream); color: var(--ink);
+  padding: 10px 18px; border-radius: 8px; font-weight: 800;
+  transition: top 0.2s ease;
+}
+.skip-link:focus { top: 12px; }
+
+.btn {
+  display: inline-block;
+  padding: 15px 28px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  transition: transform 0.15s ease, background-color 0.2s ease;
+}
+.btn--warm { background: var(--accent-warm); color: var(--ink); }
+.btn--warm:hover {
+  background: var(--green-vitality); /* the one growth signal */
+  transform: translateY(-2px);
+}
+
+.textlink {
+  font-weight: 800;
+  color: var(--neutral-cream);
+  border-bottom: 2px solid var(--green-forest);
+  padding-bottom: 2px;
+}
+.textlink:hover { border-color: var(--neutral-clay); color: var(--neutral-clay); }
+
+/* pixel-font accessory chips (the ONLY sanctioned pixel-font jobs) */
+.chip-px {
+  font-family: var(--font-px);
+  font-size: 8px;
+  text-transform: uppercase;
+  color: var(--neutral-clay);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 8px;
+  letter-spacing: 0.04em;
+}
+
+/* content sits above the WebGL canvas (z2); wordmark sits below it (z1) */
+.above-canvas { position: relative; z-index: 3; }
+
+/* SplitText line masking */
+.split-line-mask .line-inner { display: block; }
+.split-line-mask .line { overflow: hidden; display: block; }
+
+/* mask-wipe reveal targets get their clip set by JS; keep no-JS visible */
+[data-mask] { display: block; }
+
+/* stage blur veil — "rack focus" between 3D stages */
+.stage-veil {
+  position: fixed; inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  backdrop-filter: blur(var(--stage-blur, 0px));
+  -webkit-backdrop-filter: blur(var(--stage-blur, 0px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}

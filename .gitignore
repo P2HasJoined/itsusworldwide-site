@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# Nuxt build output
+.nuxt/
+.output/
+.data/
+dist/
+
+# local backup copy (kept outside git; see Website/Backups/ for real snapshots)
+ITSUSBackUP/
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# editor / OS
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+npm-debug.log*
+
+# vite/vercel local cache
+.vercel
+.cache/
