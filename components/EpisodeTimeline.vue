@@ -443,6 +443,16 @@ onBeforeUnmount(() => {
 
 @media (max-width: 520px) {
   .season__count { display: none; }
+  /* MOBILE FIX (v7.2): .season__dd-menu's desktop sizing (margin-left:148px
+     + width:252px ≈ 400px of required horizontal room) genuinely ran the
+     dropdown off the right edge of the screen on phones — confirmed by both
+     a real layout screenshot (menu clipped, "finale" badge cut off) and the
+     browser's own viewport widening to accommodate the overflow. The
+     waterfall visual moves to sit BEHIND the now-full-width menu (still
+     visible through its translucent glass background) instead of beside it. */
+  .season__pour { left: 0; right: 0; max-width: calc(100vw - 40px); }
+  .season__dd-menu { margin-left: 0; width: 100%; max-width: 280px; }
+  .season__fall { left: -6px; width: 84px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .season__viewport { overflow-x: auto; }

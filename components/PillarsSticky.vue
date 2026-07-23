@@ -178,7 +178,18 @@ onBeforeUnmount(() => ctx && ctx.revert())
 
 @media (max-width: 899px) {
   .pillars__grid { grid-template-columns: 1fr; }
-  .pillars__list { position: static; grid-auto-flow: column; overflow-x: auto; gap: 20px; padding-bottom: 6px; }
+  .pillars__list {
+    position: static;
+    grid-auto-flow: column;
+    overflow-x: auto;
+    gap: 20px;
+    padding-bottom: 6px;
+    /* MOBILE FIX (v7.2): "The Practice" was cutting off mid-word at the
+       right edge with no hint the row scrolls — fade it instead of a hard
+       clip. Desktop uses the sticky column layout above, never this rule. */
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
+    mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
+  }
   .pillars__item button { font-size: 18px; white-space: nowrap; }
   .pillars__panel { min-height: 0; }
 }

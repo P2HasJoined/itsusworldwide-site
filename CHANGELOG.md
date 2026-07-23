@@ -9,7 +9,47 @@ All generated assets are saved locally for continuity:
 - `assets/source-clips/` — raw Seedance mp4s before ffmpeg processing
 - `public/media/` — the processed clips/posters the site actually serves
 
-## v7.1 (current)
+## v7.2 (current) — mobile-only fixes, desktop untouched
+Full mobile audit (375px) done by scrolling every section via Lenis and
+checking real DOM/layout state (not just screenshots — several apparent bugs
+turned out to be screenshot compression artifacts or scroll-desync from using
+native `scrollTo` instead of the site's Lenis API; both were ruled out via the
+accessibility tree and element geometry before touching any code). Every fix
+below is scoped inside an existing `@media (max-width: ...)` block, so it is
+structurally impossible for it to reach desktop — verified by checking
+`matchMedia(...).matches` and computed styles at 1233px width after each fix
+(all read back the original untouched desktop values).
+
+- **Philosophy clouds: text was overflowing off the bottom of the puff.**
+  `.cloud__a`/`.cloud__b`'s font-size clamp floored at a fixed 16px for any
+  viewport under ~941px, while the cloud itself kept shrinking around it
+  (660px on desktop → ~307px on phones) — so 2-line labels grew
+  disproportionately tall relative to their container and spilled onto the
+  dark sky. Added a mobile-scoped smaller font clamp + reduced padding-top;
+  verified all 5 clouds' text now sits fully inside the white band (bottoms
+  at 54–70%, vs. the 77% cutoff) with real DOM measurements, not screenshots.
+- **Nav bar and "three homes" pillar list scrolled silently off-screen.**
+  Both are horizontally-scrollable rows on mobile with zero visual cue —
+  "Ask Us"/"Journal" and "The Practice" just cut off hard at the edge,
+  reading as broken/missing rather than swipeable. Added a right-edge fade
+  mask to both, mobile-scoped only.
+- **Season dropdown menu ran off the right edge of the phone screen** — the
+  real bug of this round. `.season__dd-menu` carried a fixed desktop
+  sizing (`margin-left: 148px` + `width: 252px`, ~400px of required room)
+  that a 375px phone doesn't have; the menu clipped mid-word ("Season of
+  Learning" 's "finale" badge cut off) and forced the browser to widen its
+  effective viewport to compensate. Confirmed with a real screenshot at a
+  stable scroll position, then fixed by dropping the margin and capping the
+  menu to the available width on mobile; the waterfall visual now sits
+  behind the panel instead of beside it. Re-verified: menu right edge now
+  well inside the viewport, no more phantom viewport widening.
+- Minor known cosmetic item, not fixed this round: the floating Earth/pause
+  buttons can sit over one cloud's text at a specific scroll position on
+  mobile (fixed UI over full-bleed pinned content) — didn't touch
+  FloatingAction.vue's hero-hide logic to avoid risking that behavior for a
+  purely cosmetic overlap.
+
+## v7.1
 - **msg.exe word-fall finally falls.** `overflow: hidden` on the retro window
   was clipping the falling words inside the bubble, so the fall never showed.
   Removed; the words now rain in front of everything and exit past the bottom

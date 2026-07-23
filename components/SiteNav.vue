@@ -118,6 +118,17 @@ onBeforeUnmount(() => window.removeEventListener('scroll', spyUpdate))
 }
 .pill.is-active::after { opacity: 1; }
 
+@media (max-width: 899px) {
+  /* MOBILE FIX (v7.2): the pill bar overflows and scrolls, but nothing
+     signaled that — items like "Ask Us"/"Journal" just cut off at the edge
+     with no visual cue they were reachable by swipe. A right-edge fade hints
+     there's more without needing a scroll listener. Desktop never overflows
+     here in the first place, and this rule can't reach it (scoped ≥900px out). */
+  .nav__pills {
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
+    mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
+  }
+}
 @media (max-width: 520px) {
   .pill { padding: 12px 14px 14px; font-size: 12px; }
 }

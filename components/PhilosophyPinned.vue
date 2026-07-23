@@ -308,5 +308,21 @@ onBeforeUnmount(() => mm && mm.revert())
   .philosophy__stage { grid-template-columns: 1fr; }
   .philosophy__sky { justify-items: center; }
   .cloud { width: min(360px, 82vw); }
+  /* MOBILE FIX (v7.2): the shared .cloud__text rules above were tuned for
+     desktop's pinned clouds (560–660px wide). Below 900px the clouds shrink
+     to ~260–360px, but .cloud__a/.cloud__b's font-size clamp floors at a
+     fixed 16px (1.7vw doesn't reach 16px until ~941px viewport width) — so
+     the text stayed desktop-sized while its cloud kept shrinking around it,
+     pushing 2-line labels off the bottom of the puff onto the dark sky.
+     Scoped entirely inside this @media block: cannot affect desktop, which
+     only ever renders the .philosophy--pinned rules (≥900px via JS matchMedia). */
+  .cloud__text { padding: 15% 25% 4%; }
+  .cloud__a,
+  .cloud__b { font-size: clamp(11px, 3.6vw, 15px); }
+  .cloud__amp { font-size: 11px; margin: 2px 0; }
+  /* these two carry the longest labels (5 lines) — a touch less padding
+     than the rest so their extra line clears the puff too */
+  .cloud--4 .cloud__text,
+  .cloud--5 .cloud__text { padding-top: 13%; }
 }
 </style>

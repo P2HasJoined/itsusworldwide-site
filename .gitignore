@@ -26,3 +26,6 @@ npm-debug.log*
 # vite/vercel local cache
 .vercel
 .cache/
+
+.vercel
+.env*
