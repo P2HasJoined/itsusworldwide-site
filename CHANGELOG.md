@@ -9,7 +9,41 @@ All generated assets are saved locally for continuity:
 - `assets/source-clips/` — raw Seedance mp4s before ffmpeg processing
 - `public/media/` — the processed clips/posters the site actually serves
 
-## v7.2.1 (current) — two more mobile-only fixes, found after v7.2 shipped
+## v7.2.2 (current) — cloud entrance + bob-sync bug, waterfall/LOVE watermark
+- **Clouds now slide into the scene on mobile too**, matching desktop's
+  intent: each cloud floats in from the right and fades in as it scrolls
+  into view (a one-time reveal, not a continuous scrub/pin — kept the same
+  robust pattern used for the pillars fix, avoiding mobile's fragile
+  scroll-jacking pin behavior).
+- **Found and fixed the actual cause of "words off the clouds."** It wasn't
+  a sizing/padding problem at all — the idle bob animation was only moving
+  `.cloud__img` via `translateY`, while `.cloud__text` (a separate sibling)
+  stayed put. Mid-oscillation the image visually drifted up to ~11px away
+  from its own label, making the top line look detached/floating above the
+  cloud. Fixed by animating the whole cloud figure (image + text together)
+  instead of just the image — applied to BOTH desktop and mobile bobs, since
+  the bug was structural, not mobile-specific, even though only mobile was
+  reported. Verified: image and text top-edges now match exactly (both at
+  the same pixel) at every point in the bob cycle.
+- Fixing the entrance also surfaced a second real bug: clouds waiting
+  off-screen before their turn (`xPercent: 60`) were forcing the mobile
+  browser to widen its own effective viewport to fit them — the identical
+  symptom the season-dropdown overflow bug had. Added `overflow-x: hidden`
+  to `.philosophy__sky`, scoped inside the existing mobile media query only.
+- **Season dropdown: waterfall moved beside the menu, not behind it.**
+  Both shrink slightly and sit side by side with clean gaps, fitting the
+  ~335px mobile budget with no overlap and no edge clipping.
+- **Added a hidden "LOVE" watermark**, one letter per line, in the gap
+  between the waterfall and the menu. First attempt put it behind the menu
+  panel to peek through the translucent glass — tested and found the
+  panel's 80% dark fill + blur is effectively opaque in practice (confirmed
+  by testing at 90% opacity — invisible). Moved it into the open gap
+  instead, colored with the site's own terracotta (`--accent-warm`) at
+  partial opacity so it reads as a findable but quiet background detail.
+  Desktop never renders this element (`display: none` by default, only
+  switched on inside the mobile media query).
+
+## v7.2.1 — two more mobile-only fixes, found after v7.2 shipped
 - **Philosophy clouds were completely frozen on mobile.** The mobile fallback
   set them visible with `gsap.set` and no tween at all — no bob, no life.
   Split the matchMedia query (it was OR'ing "mobile" with "desktop + reduced

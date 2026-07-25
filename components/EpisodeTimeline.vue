@@ -17,6 +17,12 @@
           </button>
 
           <div v-show="ddVisible" ref="pour" class="season__pour">
+            <!-- a quiet brand watermark tucked behind the waterfall/menu —
+                 same family of color as the terracotta band, just enough
+                 contrast to find if you look, not enough to compete with
+                 the menu text -->
+            <p class="season__love" aria-hidden="true"><span>L</span><span>O</span><span>V</span><span>E</span></p>
+
             <!-- the waterfall the bubbles pour out of -->
             <div class="season__fall" aria-hidden="true">
               <video
@@ -296,6 +302,30 @@ onBeforeUnmount(() => {
   padding-bottom: 26px;
 }
 
+/* hidden brand watermark — off by default, only revealed in the mobile
+   layout below where repositioning the waterfall frees up room for it */
+.season__love {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  pointer-events: none;
+}
+.season__love span {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  /* the site's own terracotta (--accent-warm, #C4673A) at partial opacity —
+     the pour panel sits over the dark valley background, not the orange
+     band, so it needs real brightness/warmth to read at all against that,
+     while staying muted enough to feel like a found detail, not a label */
+  color: rgba(196, 103, 58, 0.55);
+}
+
 /* the waterfall itself: generated pixel water, soft-masked at the edges */
 .season__fall {
   position: absolute;
@@ -445,14 +475,26 @@ onBeforeUnmount(() => {
   .season__count { display: none; }
   /* MOBILE FIX (v7.2): .season__dd-menu's desktop sizing (margin-left:148px
      + width:252px ≈ 400px of required horizontal room) genuinely ran the
-     dropdown off the right edge of the screen on phones — confirmed by both
-     a real layout screenshot (menu clipped, "finale" badge cut off) and the
-     browser's own viewport widening to accommodate the overflow. The
-     waterfall visual moves to sit BEHIND the now-full-width menu (still
-     visible through its translucent glass background) instead of beside it. */
+     dropdown off the right edge of the screen on phones. First fix sat the
+     waterfall BEHIND the full-width menu; user asked for it back beside the
+     menu instead — so the waterfall shrinks and moves to the left, the menu
+     takes the remaining width to its right, side by side, both fitting in
+     the available ~335px. */
   .season__pour { left: 0; right: 0; max-width: calc(100vw - 40px); }
-  .season__dd-menu { margin-left: 0; width: 100%; max-width: 280px; }
-  .season__fall { left: -6px; width: 84px; }
+  .season__fall { left: 0; width: 62px; }
+  .season__dd-menu { margin-left: 106px; width: calc(100% - 106px); max-width: 226px; }
+  /* the LOVE watermark lives in the open gap between the waterfall and the
+     menu — NOT behind either one: the waterfall video is fully opaque and
+     the menu's dark glass turned out too opaque in practice to let a
+     background color show through it (tested — even 90% opacity vanished
+     completely behind the menu's blur+tint). Bare background here, so a
+     muted version of the site's own terracotta reads as a findable but
+     quiet watermark instead of fighting either element. */
+  .season__love {
+    display: flex;
+    left: 68px;
+    width: 32px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .season__viewport { overflow-x: auto; }

@@ -74,11 +74,12 @@ onMounted(() => {
     section.value.classList.add('philosophy--pinned')
     const els = clouds.value
 
-    /* gentle, endless bob so the settled clouds keep breathing (independent of
-       scroll; runs on the inner image so it never fights the entrance x) */
+    /* gentle, endless bob so the settled clouds keep breathing (independent
+       of scroll). Runs on the whole figure (image + text together) — running
+       it on just the image lets the label drift away from its own cloud at
+       the peak of the oscillation. */
     els.forEach((el, i) => {
-      const img = el.querySelector('.cloud__img')
-      gsap.to(img, {
+      gsap.to(el, {
         y: 8 + (i % 2) * 6,
         duration: 3.4 + i * 0.4,
         ease: 'sine.inOut',
@@ -114,24 +115,33 @@ onMounted(() => {
     }
   })
 
-  /* mobile (motion allowed): clouds settle in place — no pin, no float-in
-     (scroll-jacking pins are avoided on mobile throughout this site), but
-     MOBILE FIX (v7.2.1): they were being frozen completely static via
-     gsap.set with no tween at all. Give them the same gentle endless bob
-     desktop's settled clouds have, so they still read as alive. */
+  /* mobile (motion allowed): no pin (scroll-jacking pins are avoided on
+     mobile throughout this site), but each cloud still slides into the
+     scene as it scrolls into view — a one-time, non-scrubbed reveal
+     (start once, no continuous scroll-position sync), same robust pattern
+     used to fix the pillars panels. Plus the same idle bob as desktop, run
+     on the whole figure so text never drifts from its own cloud. */
   mm.add('(max-width: 899px) and (prefers-reduced-motion: no-preference)', () => {
     const els = clouds.value
-    gsap.set(els, { clearProps: 'all', autoAlpha: 1, x: 0 })
     els.forEach((el, i) => {
-      const img = el.querySelector('.cloud__img')
-      gsap.to(img, {
+      gsap.set(el, { xPercent: 60, autoAlpha: 0 })
+      gsap.to(el, {
+        xPercent: 0,
+        autoAlpha: 1,
+        ease: 'power2.out',
+        duration: 0.7,
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      })
+      gsap.to(el, {
         y: 8 + (i % 2) * 6,
         duration: 3.4 + i * 0.4,
         ease: 'sine.inOut',
         repeat: -1,
         yoyo: true,
+        delay: 0.7,
       })
     })
+    return () => gsap.set(els, { clearProps: 'all' })
   })
 
   /* reduced motion (any width): fully static, no bob either */
@@ -326,7 +336,11 @@ onBeforeUnmount(() => mm && mm.revert())
 
 @media (max-width: 899px) {
   .philosophy__stage { grid-template-columns: 1fr; }
-  .philosophy__sky { justify-items: center; }
+  /* clip the pre-entrance offset (xPercent:60) so an off-screen-waiting
+     cloud can't force the mobile browser to widen its effective viewport —
+     the same real overflow symptom the season-dropdown bug had. Scoped to
+     this mobile query only; desktop's pinned sky never gets this rule. */
+  .philosophy__sky { justify-items: center; overflow-x: hidden; }
   .cloud { width: min(360px, 82vw); }
   /* MOBILE FIX (v7.2): the shared .cloud__text rules above were tuned for
      desktop's pinned clouds (560–660px wide). Below 900px the clouds shrink
