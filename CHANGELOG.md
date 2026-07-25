@@ -9,7 +9,27 @@ All generated assets are saved locally for continuity:
 - `assets/source-clips/` — raw Seedance mp4s before ffmpeg processing
 - `public/media/` — the processed clips/posters the site actually serves
 
-## v7.2 (current) — mobile-only fixes, desktop untouched
+## v7.2.1 (current) — two more mobile-only fixes, found after v7.2 shipped
+- **Philosophy clouds were completely frozen on mobile.** The mobile fallback
+  set them visible with `gsap.set` and no tween at all — no bob, no life.
+  Split the matchMedia query (it was OR'ing "mobile" with "desktop + reduced
+  motion" together) so mobile now gets the same gentle endless bob the
+  desktop settled-clouds have, while reduced-motion (any width) stays fully
+  static as intended. Verified the bob's Y-transform genuinely oscillates
+  over time (7.99 → 2.82 → 0.70 → 7.06 → 5.67px across 7s of sampling).
+- **Podcast/Website/Practice panel transitions "not working" on mobile.**
+  Root cause: a continuous `scrub:true` ScrollTrigger paired with a 3D
+  `z:-60→0` transform — mathematically verified correct in testing (opacity
+  interpolated smoothly 0.35→1 across dense scroll sampling), but this
+  specific combination is a known-fragile pairing for real mobile Safari/
+  Chrome compositing, which is why it likely read as static/broken on an
+  actual device despite testing "fine" here. Replaced with a simpler
+  one-time reveal on mobile (fade + rise, `once: true`, no scrub, no 3D)
+  — same visual outcome, far more robust. Desktop keeps the original
+  scrub + depth effect untouched (re-verified: `matrix3d` transform still
+  active during desktop transitions, "flat" throughout on mobile).
+
+## v7.2 — mobile-only fixes, desktop untouched
 Full mobile audit (375px) done by scrolling every section via Lenis and
 checking real DOM/layout state (not just screenshots — several apparent bugs
 turned out to be screenshot compression artifacts or scroll-desync from using

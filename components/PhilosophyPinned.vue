@@ -114,8 +114,28 @@ onMounted(() => {
     }
   })
 
-  /* mobile / reduced motion: clouds simply settled, no pin, no float-in */
-  mm.add('(max-width: 899px), (prefers-reduced-motion: reduce)', () => {
+  /* mobile (motion allowed): clouds settle in place — no pin, no float-in
+     (scroll-jacking pins are avoided on mobile throughout this site), but
+     MOBILE FIX (v7.2.1): they were being frozen completely static via
+     gsap.set with no tween at all. Give them the same gentle endless bob
+     desktop's settled clouds have, so they still read as alive. */
+  mm.add('(max-width: 899px) and (prefers-reduced-motion: no-preference)', () => {
+    const els = clouds.value
+    gsap.set(els, { clearProps: 'all', autoAlpha: 1, x: 0 })
+    els.forEach((el, i) => {
+      const img = el.querySelector('.cloud__img')
+      gsap.to(img, {
+        y: 8 + (i % 2) * 6,
+        duration: 3.4 + i * 0.4,
+        ease: 'sine.inOut',
+        repeat: -1,
+        yoyo: true,
+      })
+    })
+  })
+
+  /* reduced motion (any width): fully static, no bob either */
+  mm.add('(prefers-reduced-motion: reduce)', () => {
     gsap.set(clouds.value, { clearProps: 'all', autoAlpha: 1, x: 0 })
   })
 })

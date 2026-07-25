@@ -86,19 +86,41 @@ onMounted(() => {
           if (self.isActive) active.value = i
         },
       })
-      /* subtle depth shift between panels instead of a flat crossfade */
+      /* subtle depth shift between panels instead of a flat crossfade.
+         MOBILE FIX (v7.2.1): the continuous scrub + 3D z-transform combo is
+         a known-fragile pairing on real mobile Safari/Chrome compositing —
+         it read as "not animating" on device even though the underlying
+         ScrollTrigger math checked out fine in testing. Mobile now gets a
+         simpler one-time reveal (no scrub, no z-depth) instead — same fade
+         + rise, just driven by a single robust trigger instead of a
+         continuously-sampled scroll position. Desktop keeps the original
+         scrub-driven depth effect untouched. */
       if (!engine.reduced) {
-        engine.gsap.fromTo(
-          panel,
-          { z: -60, autoAlpha: 0.35, y: 40 },
-          {
-            z: 0,
-            autoAlpha: 1,
-            y: 0,
-            ease: 'power2.out',
-            scrollTrigger: { trigger: panel, start: 'top 85%', end: 'top 45%', scrub: true },
-          }
-        )
+        if (engine.isMobile()) {
+          engine.gsap.fromTo(
+            panel,
+            { autoAlpha: 0.35, y: 24 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.6,
+              ease: 'power2.out',
+              scrollTrigger: { trigger: panel, start: 'top 88%', once: true },
+            }
+          )
+        } else {
+          engine.gsap.fromTo(
+            panel,
+            { z: -60, autoAlpha: 0.35, y: 40 },
+            {
+              z: 0,
+              autoAlpha: 1,
+              y: 0,
+              ease: 'power2.out',
+              scrollTrigger: { trigger: panel, start: 'top 85%', end: 'top 45%', scrub: true },
+            }
+          )
+        }
       }
     })
   })
