@@ -9,7 +9,24 @@ All generated assets are saved locally for continuity:
 - `assets/source-clips/` — raw Seedance mp4s before ffmpeg processing
 - `public/media/` — the processed clips/posters the site actually serves
 
-## v7.2.2 (current) — cloud entrance + bob-sync bug, waterfall/LOVE watermark
+## v7.2.4 (current) — "Welcome to Us" title no longer wraps at full screen
+- The philosophy title was `clamp(44px, 6.5vw, 96px)`, but "Welcome" is ~4.17em
+  wide and the pinned lead column is capped at 360px, so above ~86px (any
+  screen over ~1330px wide) the last "e" dropped to its own line. Cap lowered
+  to 80px (334px wide). Verified on one line at 1920px and 1400px; narrower
+  and mobile sizes are unchanged since 6.5vw was already below the cap there.
+
+## v7.2.3 — LOVE watermark moved inside the waterfall
+- User feedback: the watermark should sit INSIDE the waterfall itself, not
+  in the gap beside it. Repositioned `.season__love` to exactly overlay
+  `.season__fall`'s own box (same left/width), z-index raised above the
+  video, `mix-blend-mode: overlay` + bright cream color so the letters take
+  on the water's own blue tint instead of sitting as a flat sticker on top —
+  reads as genuinely part of the waterfall, going down with the flow.
+  Waterfall widened back slightly (78px) since it no longer shares its
+  space with a separate watermark column; menu adjusts to match.
+
+## v7.2.2 — cloud entrance + bob-sync bug, waterfall/LOVE watermark
 - **Clouds now slide into the scene on mobile too**, matching desktop's
   intent: each cloud floats in from the right and fades in as it scrolls
   into view (a one-time reveal, not a continuous scrub/pin — kept the same

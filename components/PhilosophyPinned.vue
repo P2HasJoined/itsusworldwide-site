@@ -168,7 +168,10 @@ onBeforeUnmount(() => mm && mm.revert())
 }
 
 .philosophy__title {
-  font-size: clamp(44px, 6.5vw, 96px);
+  /* capped at 80px: "Welcome" is ~4.17em wide and the pinned lead column
+     tops out at 360px, so anything above ~86px pushed the final "e" onto a
+     second line at full screen */
+  font-size: clamp(44px, 6.5vw, 80px);
   margin-bottom: 26px;
 }
 /* the thesis line: bigger than body copy, with a slow breathing cream glow

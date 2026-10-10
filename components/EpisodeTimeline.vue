@@ -303,27 +303,27 @@ onBeforeUnmount(() => {
 }
 
 /* hidden brand watermark — off by default, only revealed in the mobile
-   layout below where repositioning the waterfall frees up room for it */
+   layout below, where it overlays the waterfall itself (same box, higher
+   z-index so it paints above the video/CSS stream) */
 .season__love {
   display: none;
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 1;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
   pointer-events: none;
+  mix-blend-mode: overlay;
 }
 .season__love span {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 12px;
-  letter-spacing: 0.03em;
-  /* the site's own terracotta (--accent-warm, #C4673A) at partial opacity —
-     the pour panel sits over the dark valley background, not the orange
-     band, so it needs real brightness/warmth to read at all against that,
-     while staying muted enough to feel like a found detail, not a label */
-  color: rgba(196, 103, 58, 0.55);
+  font-size: 15px;
+  letter-spacing: 0.05em;
+  /* bright cream, blended via mix-blend-mode so it reads as part of the
+     water's own light/foam tones rather than a sticker on top of it */
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* the waterfall itself: generated pixel water, soft-masked at the edges */
@@ -481,19 +481,15 @@ onBeforeUnmount(() => {
      takes the remaining width to its right, side by side, both fitting in
      the available ~335px. */
   .season__pour { left: 0; right: 0; max-width: calc(100vw - 40px); }
-  .season__fall { left: 0; width: 62px; }
-  .season__dd-menu { margin-left: 106px; width: calc(100% - 106px); max-width: 226px; }
-  /* the LOVE watermark lives in the open gap between the waterfall and the
-     menu — NOT behind either one: the waterfall video is fully opaque and
-     the menu's dark glass turned out too opaque in practice to let a
-     background color show through it (tested — even 90% opacity vanished
-     completely behind the menu's blur+tint). Bare background here, so a
-     muted version of the site's own terracotta reads as a findable but
-     quiet watermark instead of fighting either element. */
+  .season__fall { left: 0; width: 78px; }
+  .season__dd-menu { margin-left: 88px; width: calc(100% - 88px); max-width: 248px; }
+  /* the LOVE watermark now lives INSIDE the waterfall's own box (same
+     left/width as .season__fall, not a separate gap column) so the letters
+     read as part of the water itself, going down with the flow. */
   .season__love {
     display: flex;
-    left: 68px;
-    width: 32px;
+    left: 0;
+    width: 78px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
