@@ -6,8 +6,8 @@
           <p class="eyebrow">The name&rsquo;s philosophy</p>
           <h2 class="philosophy__title display" data-split>Welcome<br />to&nbsp;Us.</h2>
           <p class="philosophy__copy">
-            &ldquo;Us&rdquo; is four things at once: you, the people around you, your community,
-            and society. Every episode lives in the tension between them.
+            &ldquo;Us&rdquo; balances five dualities of life at once. Every episode
+            lives somewhere in between.
           </p>
         </div>
 

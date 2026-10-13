@@ -9,7 +9,40 @@ All generated assets are saved locally for continuity:
 - `assets/source-clips/` — raw Seedance mp4s before ffmpeg processing
 - `public/media/` — the processed clips/posters the site actually serves
 
-## v7.2.4 (current) — "Welcome to Us" title no longer wraps at full screen
+## v7.2.7 (current) — "Love isn't a one time thing" is now a centered decode reveal
+- The phrase moved from the two sides to the middle of the screen, as one
+  centered block ("Love isn't a one time thing," / "it's a daily habit.").
+  It starts blurred, faint and scrambled, and decodes letter by letter:
+  - desktop (real mouse): letters near the cursor decode as it passes over
+    them, and stay decoded; a small "move your cursor across the words" hint
+    fades away after the first letter.
+  - mobile / touch / narrow windows: it decodes left to right as the reader
+    keeps scrolling (the section is taller with a sticky stage, no pin), and
+    re-scrambles when scrolling back up; hint reads "keep scrolling".
+  Each scrambled letter keeps its real letter's width (the real glyph is
+  transparent, a random glyph is painted over it), so nothing jitters. The
+  real text is always in the DOM and the section's aria-label, so screen
+  readers get it plainly; reduced motion shows it plainly with no scramble.
+  The scramble only animates while the section is on screen.
+
+## v7.2.6 — campfire picture removed from behind the love phrases
+- The full-bleed campfire scene behind "Love isn't a one time thing / it's a
+  daily habit" is switched off (temporarily, per the user): the phrases now sit
+  directly on the page's own valley background. The phrases switch from ink to
+  the site's cream (with a soft dark halo) so they stay readable on it. The
+  campfire clip is no longer downloaded or played while off. To bring it back,
+  set `SHOW_PICTURE = true` at the top of `components/MotionBreak.vue`; the
+  campfire files and loading logic are untouched.
+
+## v7.2.5 — philosophy paragraph matches the five clouds
+- The thesis line said "Us is four things at once: you, the people around you,
+  your community, and society", but the clouds show five pairs. Now reads
+  "Us balances five dualities of life at once. Every episode lives somewhere
+  in between." (wording from the user). Shorter than before, so it clears
+  the bottom-left cloud in the pinned layout. ("Four assumptions" is a
+  different section and is unchanged.)
+
+## v7.2.4 — "Welcome to Us" title no longer wraps at full screen
 - The philosophy title was `clamp(44px, 6.5vw, 96px)`, but "Welcome" is ~4.17em
   wide and the pinned lead column is capped at 360px, so above ~86px (any
   screen over ~1330px wide) the last "e" dropped to its own line. Cap lowered
